@@ -1,0 +1,47 @@
+This is pBibTeX, Version 0.99d-j0.33 (utf8.euc) (TeX Live 2016/Arch Linux)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: hidden_markov_model.aux
+The style file: junsrt.bst
+Database file #1: thesisrefs.bib
+You've used 5 entries,
+            2270 wiz_defined-function locations,
+            565 strings with 4671 characters,
+and the built_in function-call counts, 1214 in all, are:
+= -- 86
+> -- 26
+< -- 3
++ -- 12
+- -- 7
+* -- 34
+:= -- 149
+add.period$ -- 14
+call.type$ -- 5
+change.case$ -- 2
+chr.to.int$ -- 0
+cite$ -- 5
+duplicate$ -- 90
+empty$ -- 140
+format.name$ -- 14
+if$ -- 300
+int.to.chr$ -- 0
+int.to.str$ -- 5
+missing$ -- 7
+newline$ -- 27
+num.names$ -- 5
+pop$ -- 51
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 64
+stack$ -- 0
+substring$ -- 40
+swap$ -- 15
+text.length$ -- 3
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 0
+while$ -- 8
+width$ -- 6
+write$ -- 51
+is.kanji.str$ -- 44

@@ -1,0 +1,29 @@
+\begin{thebibliography}{1}
+
+\bibitem{probability_statistics_for_programming}
+平岡和幸堀玄.
+\newblock プログラミングのための確率統計.
+\newblock オーム社, 2009.
+
+\bibitem{PRLM_ge}
+ビショップCM.
+\newblock パターン認識と機械学習下:ベイズ理論による統計的予測.
+\newblock 丸善出版, 2008.
+
+\bibitem{zokupata}
+石井健一郎上田修功.
+\newblock 続・わかりやすいパターン認識: 教師なし学習入門.
+\newblock オーム社, 2014.
+
+\bibitem{levinson1983introduction}
+Stephen~E Levinson, Lawrence~R Rabiner, and Man~Mohan Sondhi.
+\newblock An introduction to the application of the theory of probabilistic
+  functions of a markov process to automatic speech recognition.
+\newblock {\em Bell System Technical Journal, The}, Vol.~62, No.~4, pp.
+  1035--1074, 1983.
+
+\bibitem{scaling_hmm}
+Dawei Shen.
+\newblock Some mathematics for hmm, 2008.
+
+\end{thebibliography}
