@@ -1,0 +1,82 @@
+\newpage
+\section{Continuous Hidden Markov Model}
+\subsection{モデル概要}
+Continuous Hidden Markov Modelは，出力記号が離散値ではなく連続値である隠れマルコフモデルである．
+1章で述べた隠れマルコフモデルでは，各状態から出力記号ごとに出力確率があったが，
+出力記号が連続値をとると，出力確率を設定することができない．
+そこでContinuous Hidden Markov Modelでは，出力が連続確率密度分布に従うとし，
+各状態から各連続確率密度分布の選択確率を定めることで，出力を連続値とする．
+
+\subsection{確率モデル}
+
+\begin{myframe}{Notation of Continuous HMM}
+	\begin{tabular}{ll}
+		$N$ & ：状態数 \\
+		$M$ & ：状態内の確率分布の数(クラスタ数) \\
+		$s_{t} \in \{\omega_{1}, \omega_{2},..., \omega_{N}\}$ & ：時点$t$での状態 \\
+    $m_{t} \in \{c_{1}, c_{2}, ..., c_{M}\}$ & ：時点$t$でのクラスタ \\
+		$x_{t} \in \{v_{11}, ..., v_{1M}, v_{N1}, ..., v_{NM}\}$ & ：時点$t$での観測結果(出力記号) \\
+		$\mathbf{s} = s_{1}s_{2}\cdots s_{t} \cdots s_{T}$ & ：状態系列 \\
+    $\mathbf{m} = m_{1}m_{2}\cdots m_{t} \cdots s_{T}$ & ： クラスタ系列\\
+		$\mathbf{x} = x_{1}x_{2}\cdots x_{t} \cdots x_{T}$ & ：観測記号系列 \\
+    $\pi_{i}$ & ：初期状態($t=1$)が$\omega_{i}$である確率 $P(s_{1} = \omega_{i})$ \\
+		$a_{ij}，a(\omega_{i}, \omega_{j})$ & ：状態$\omega_{i}$から状態$\omega_{j}$への遷移確率 $P(s_{t} = \omega_{j} | s_{t-1} = \omega_{i})$ \\
+    $g_{jk}$ &  : 状態$\omega_{j}$からクラスタ$c_{k}$を出力する確率 $P(m_{t} = c_{k} | s_{t} = \omega_{j})$ \\
+    $\mu_{ik}$ & : クラスタ$v_{ik}$の平均 \\
+    $\sigma_{ik}^{2}$ & : クラスタ$v_{ik}$の分散 \\
+    $\bm{\pi}=(\pi_{1}, \pi_{2}, ..., \pi_{N})$ & ：$\pi_{i}$を成分としてもつ$N$次元のベクトル \\
+		$\bm{A}$ & ：$a_{ij}$を($i,j$)成分としてもつ$N \times N$の行列 \\
+    $\bm{G}$ & : $g_{jk}$を($j,k$)成分としてもつ$N \times M$の行列 \\
+    $\bm{\mu} = (\mu_{11}, ..., \mu_{1M}, \mu_{N1}, ..., \mu_{NM})$ & : $\mu_{ik}$を成分としてもつ$NM$次元のベクトル \\
+    $\bm{\sigma} = (\sigma_{11}, ..., \sigma_{1M}, \sigma_{N1}, ..., \sigma_{NM})$ & : $\sigma_{ik}$を成分としてもつ$NM$次元のベクトル \\
+	\end{tabular}
+\end{myframe}
+
+\subsubsection{状態遷移確率}
+\begin{equation}
+	a_{ij} = P(s_{t} = \omega_{j} | s_{t-1} = \omega_{i})
+\end{equation}
+
+\subsubsection{出力確率}
+
+\begin{eqnarray}
+  P(x_{t} | s_{t} = \omega_{j}) &=& \sum_{k=1}^{M} P(m_{t} = c_{k} | s_{t} = \omega_{j}) P(x_{t} | s_{t} = \omega_{j}, m_{t} = c_{k}) \\
+                                &=& \sum_{k=1}^{M} g_{jk} \cdot \phi(x_{t}, \mu_{jk}, \sigma_{jk}^{2})
+\end{eqnarray}
+
+ここで，
+\begin{equation}
+  g_{jk} = P(m_{t} = c_{k} | s_{t} = \omega_{j})
+\end{equation}
+
+\begin{equation}
+  \phi(x_{t}, \mu_{jk}, \sigma_{jk}^{2}) = P(x_{t} | s_{t} = \omega_{j}, m_{t} = c_{k})
+\end{equation}
+とした．
+
+$g_{jk}$は，状態$\omega_{j}$からその状態内のクラスタ$c_{k}$が選択される確率である．
+また，$g_{jk}$には次の性質がある．
+\begin{equation}
+  \sum_{k=1}^{M} g_{jk} = 1
+\end{equation}
+
+$\phi(\cdot)$はカーネル関数と呼ばれ，正規分布が用いられる．
+\begin{equation}
+  \phi(x_{t}, \mu_{jk}, \sigma_{jk}^{2}) = \frac{1}{\sqrt{2\pi\sigma_{jk}^{2}}} \exp\left(-\frac{(x_{t} - \mu_{jk})^{2}}{2\sigma_{jk}^{2}}\right)
+\end{equation}
+
+\subsection{パラメータ推定}
+推定すべきパラメータをまとめて
+\begin{equation}
+  \bm{\theta} = (\bm{\pi}, \bm{A}, \bm{G}, \bm{\mu}, \bm{\sigma})
+\end{equation}
+とする．
+
+HMMと同様に，EMアルゴリズムに基づいてQ関数を定義し，最大化することによりパラメータを推定する．
+
+\begin{equation}
+  Q(\bm{\theta}^{0}, \bm{\theta}) = \sum_{\mathbf{s}} \sum_{\mathbf{m}} P(\mathbf{s}, \mathbf{m} | \mathbf{x}; \bm{\theta}^{0}) \log P(\mathbf{x}, \mathbf{s}, \mathbf{m}; \bm{\theta})
+\end{equation}
+
+
+この後の式展開など詳しい情報は，参考文献\cite{TutorialHMM}，参考文献\cite{1988確率モデルによる音声認識}p71-p73を参照．

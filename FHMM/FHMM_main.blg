@@ -1,0 +1,51 @@
+This is pBibTeX, Version 0.99d-j0.33 (utf8.euc) (TeX Live 2017/Arch Linux)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: FHMM_main.aux
+The style file: junsrt.bst
+Database file #1: thesisrefs.bib
+Warning--empty author and editor in 1988確率モデルによる音声認識
+Warning--empty journal in s_f_fhmm
+Warning--empty booktitle in Dongheui2008missing
+You've used 12 entries,
+            2270 wiz_defined-function locations,
+            608 strings with 5824 characters,
+and the built_in function-call counts, 3274 in all, are:
+= -- 251
+> -- 75
+< -- 11
++ -- 33
+- -- 21
+* -- 136
+:= -- 385
+add.period$ -- 34
+call.type$ -- 12
+change.case$ -- 8
+chr.to.int$ -- 0
+cite$ -- 15
+duplicate$ -- 228
+empty$ -- 351
+format.name$ -- 42
+if$ -- 812
+int.to.chr$ -- 0
+int.to.str$ -- 12
+missing$ -- 13
+newline$ -- 60
+num.names$ -- 11
+pop$ -- 101
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 178
+stack$ -- 0
+substring$ -- 144
+swap$ -- 55
+text.length$ -- 11
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 3
+while$ -- 23
+width$ -- 14
+write$ -- 119
+is.kanji.str$ -- 115
+(There were 3 warnings)

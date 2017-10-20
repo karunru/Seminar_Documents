@@ -1,0 +1,38 @@
+\documentclass[a4j]{jarticle}
+
+\usepackage{additional}
+
+\setlength{\voffset}{-1truein}
+% \setlength{\hoffset}{-1truein}
+
+\setlength{\topmargin}{28truemm}
+\setlength{\headheight}{0truemm}
+\setlength{\headsep}{0truemm}
+
+\newcommand{\vtr}[1]{\mbox{\boldmath $#1$}}
+
+\makeatletter
+	\renewcommand{\theequation}{%
+  \thesection.\arabic{equation}}
+  \@addtoreset{equation}{section}
+
+\makeatother
+
+\title{Factorial Hidden Markov Models(FHMM)}
+\author{山下 滉}
+\date{2017/10/20}
+
+\begin{document}
+
+\maketitle
+
+\input{hidden_markov_model}
+
+\input{continuous_hidden_markov_model}
+
+\input{factorial_hidden_markov_models}
+
+\bibliographystyle{junsrt}
+\bibliography{thesisrefs}
+
+\end{document}

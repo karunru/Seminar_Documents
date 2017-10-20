@@ -1,0 +1,66 @@
+\begin{thebibliography}{10}
+
+\bibitem{probability_statistics_for_programming}
+平岡和幸堀玄.
+\newblock プログラミングのための確率統計.
+\newblock オーム社, 2009.
+
+\bibitem{zokupata}
+石井健一郎上田修功.
+\newblock 続・わかりやすいパターン認識: 教師なし学習入門.
+\newblock オーム社, 2014.
+
+\bibitem{levinson1983introduction}
+Stephen~E Levinson, Lawrence~R Rabiner, and Man~Mohan Sondhi.
+\newblock An introduction to the application of the theory of probabilistic
+  functions of a markov process to automatic speech recognition.
+\newblock {\em Bell System Technical Journal, The}, Vol.~62, No.~4, pp.
+  1035--1074, 1983.
+
+\bibitem{bishop:2006:PRML}
+Christopher~M. Bishop.
+\newblock {\em Pattern Recognition and Machine Learning}.
+\newblock Springer, 2006.
+
+\bibitem{TutorialHMM}
+Javier~R. Movellan.
+\newblock Tutorial on hidden markov models.
+
+\bibitem{1988確率モデルによる音声認識}
+確率モデルによる音声認識.
+\newblock 確率モデルによる音声認識. 電子情報通信学会(コロナ社), 1988.
+
+\bibitem{variational_method}
+Michael~I. Jordan, Zoubin Ghahramani, Tommi~S. Jaakkola, and Lawrence~K. Saul.
+\newblock An introduction to variational methods for graphical models.
+\newblock {\em Mach. Learn.}, Vol.~37, No.~2, pp. 183--233, November 1999.
+
+\bibitem{fhmm}
+Zoubin Ghahramani and Michael~I. Jordan.
+\newblock Factorial hidden markov models.
+\newblock {\em Mach. Learn.}, Vol.~29, No. 2-3, pp. 245--273, November 1997.
+
+\bibitem{s_f_fhmm}
+Jean-Louis Durrieu. and Jean-Philippe Thiran.
+\newblock Source/filter factorial hidden markov model, with application to
+  pitch and formant tracking.
+\newblock Vol.~21, pp. 2541--2553, August 2013.
+
+\bibitem{Logan97factorialhidden}
+Beth Logan and Pedro~J. Moreno.
+\newblock Factorial hidden markov models for speech recognition: Preliminary
+  experiments, 1997.
+
+\bibitem{Dongheui2008missing}
+Dana Kulic~Dongheui Lee and Yoshihiko Nakamura.
+\newblock Missing motion data recovery using factorial hidden markov models.
+\newblock Robotics and Automation, 2008. ICRA 2008. IEEE International
+  Conference., May 2008.
+
+\bibitem{NepalY13}
+Anjan Nepal and Alexander Yates.
+\newblock Factorial hidden markov models for learning representations of
+  natural language.
+\newblock {\em CoRR}, 2013.
+
+\end{thebibliography}
