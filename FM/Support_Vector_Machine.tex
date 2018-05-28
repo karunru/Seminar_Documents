@@ -1,0 +1,49 @@
+\section{Support Vector Machine}
+Support Vector Machine（SVM）は，教師あり学習を用いるパターン認識モデルである\cite{Cortes:1995:SN:218919.218929}．
+分類や回帰に適応でき，今日の機械学習の場において広く利用されている手法の一つである．
+
+SVMは，識別境界からデータまでの距離``Margin''を最大化するように学習を行うため，
+汎化性能が高いことや，最終的に学習に利用するのは識別境界から一番近いデータである``Support Vector''のみのため学習計算量が小さい点などがメリットとしてあげられる．
+
+SVMのモデルの式は$n$次元の入力ベクトル$\vtr{x}$とモデルのパラメータ$\vtr{w}$の内積で表される．
+\begin{equation}
+  \hat{y}(\vtr{x}) = \dt<\phi(\vtr{x}), \vtr{w}>
+\end{equation}
+ここで，$\phi(\vtr{x})$は$\R^{n}$の特徴空間からより複雑な空間へ写像されたベクトルを表す．
+また，写像$\phi$はカーネルと次のような関係がある．
+\begin{equation}
+  K:\R^{n} \times \R^{n} \to \R, \ K(\vtr{x}, \vtr{z}) = \dt<\phi(\vtr{x}), \phi(\vtr{z})>
+\end{equation}
+
+最もシンプルなカーネル関数は線形関数であり，$K_{l}(\vtr{x},\vtr{z}) = 1 + \dt<\vtr{x},\vtr{z}>$と定義される．
+また，このときの写像されたベクトルは$\phi(\vtr{x}) = (1, x_{1}, \cdots, x_{n})^{\top}$と表される．
+このときのSVMを線形SVMと言い，モデルの式は次のように書き換えられる．
+\begin{equation}
+  \hat{y}(\vtr{x}) = w_{0} + \sum_{i=1}^{n}w_{i}{x}_{i},\  w_{0} \in \R, \vtr{w} \in \R^{n}
+\end{equation}
+
+多項式カーネル関数$K(\vtr{x},\vtr{z}) = (1 + \dt<\vtr{x},\vtr{z}>)^{d}$は，SVMの変数間のより高い相互作用をモデル化することを可能にする．
+ここで，$d$はカーネル関数の次数を表す．
+$d = 2$のときの写像されたベクトルは次のように表される．
+\begin{eqnarray}
+   &&\phi(\vtr{x}) = (1, \sqrt{2} x_{1}, \cdots, \sqrt{2} x_{n}, x_{1}^{2}, \cdots, x_{n}^{2}, \nonumber \\
+   &&\sqrt{2}x_{1}x_{2}, \cdots, \sqrt{2}x_{1}x_{n}, \sqrt{2}x_{2}x_{3}, \cdots, \sqrt{2}x_{n-1}x_{n}) \nonumber\\
+   &&
+\end{eqnarray}
+このときのSVMを多項式SVMと言い，モデルの式は次のように書き換えられる．
+\begin{eqnarray}
+  \hat{y}(\vtr{x}) = w_{0} + &\sqrt{2}& \sum_{i=1}^{n} w_{i} {x}_{i} + \sum_{i=1}^{n} w_{i,i}^{(2)} x_{i}^{2} \nonumber \\
+  &+& \sqrt{2} \sum_{i=1}^{n} \sum_{j=i+1}^{n} w_{i,j}^{(2)} x_{i} x_{j} \label{eq:poly_SVM}
+\end{eqnarray}
+ここで，モデルのパラメータは
+\begin{equation}
+  w_{0} \in \R, \vtr{w} \in \R^{n}, \vtr{W}^{(2)} \in \R^{n \times n}
+\end{equation}
+である．また，$\vtr{W}^{(2)}$は対称行列である．
+
+これらのカーネル関数を用いることにより，具体的な写像の関数である$\phi(\cdot)$が未知でも
+計算を行うことができる．これを\textbf{カーネルトリック}という．
+また，カーネル関数を用いることにより，
+元の特徴空間では線形分離が不可能であったデータを線形分離することが可能となる．
+
+SVMのパラメータは，再急降下法や確率的勾配降下法などの勾配法を用いて求めることができる．

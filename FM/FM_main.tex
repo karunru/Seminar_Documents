@@ -1,0 +1,34 @@
+\documentclass[a4j]{jarticle}
+
+\usepackage{additional}
+
+\setlength{\voffset}{-1truein}
+% \setlength{\hoffset}{-1truein}
+
+\setlength{\topmargin}{28truemm}
+\setlength{\headheight}{0truemm}
+\setlength{\headsep}{0truemm}
+
+\makeatletter
+	\renewcommand{\theequation}{%
+  \thesection.\arabic{equation}}
+  \@addtoreset{equation}{section}
+
+\makeatother
+
+\title{Factorization Machines}
+\author{山下 滉}
+\date{2018/05/25}
+
+\begin{document}
+
+\maketitle
+
+\input{Overview}
+\input{Description_of_Data}
+\input{Factorization_Machines}
+
+\bibliographystyle{junsrt}
+\bibliography{references}
+
+\end{document}

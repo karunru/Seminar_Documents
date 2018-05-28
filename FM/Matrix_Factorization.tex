@@ -1,0 +1,60 @@
+\section{Matrix Factorization}
+\begin{figure}[t]
+  \centering \includegraphics[width=1\hsize, bb=0 0 736 426]{fig/MF.pdf}
+  \caption{Diagram of Matrix Factorization．}
+  \label{fig:MF}
+\end{figure}
+
+Matrix Factorization（MF）は，$m \times n$の行列を$m \times k$と$k \times n$の2つの行列に分解し，
+その積で元の式を近似することで，元の行列では未知（0）であった要素を推測する手法である\cite{Koren:2009:MFT:1608565.1608614}．
+図\ref{fig:MF}に，MFの概要図を示す．
+
+$m \times n$の行列を$R$，$m \times k$の行列を$Q$，$k \times n$の行列を$P$とすると，
+\begin{equation}
+  R \approx QP
+\end{equation}
+と表せる．
+
+$QP=\hat{R}$とすると，$\hat{R}$の要素$\hat{r}_{ij}$は
+\begin{equation}
+  \hat{r}_{ij} = \vtr{q}_{i}^{\top} \vtr{p}_{j} = \sum_{f=1}^{k} q_{if} p_{fj}
+\end{equation}
+と表される．ここで，$\vtr{q}_{i}$は$Q$の$i$行目のベクトル，$\vtr{p}_{j}$は$P$の$j$列目のベクトルである．
+
+$R$を近似する2つの行列$Q$と$P$を求めるには，$R$と$\hat{R}$の誤差が最小になるような$Q$と$P$を求めればよい．
+
+\subsection{Non-negative Matrix Factorization}
+Non-negative Matrix Factorization（NMF）は，MFの元の行列の全ての要素$r_{ij}$が0以上であるとき，
+分解される行列$Q$と$P$の各要素も全て0以上であるという制約を設けたMFである\cite{NIPS2000_1861}．
+
+NMFでは，$R$と$\hat{R}$の誤差をユークリッド距離で測るとき，以下の式で$Q$と$P$を求める．
+
+\begin{eqnarray}
+  P_{ij}^{(n+1)} &=& P_{ij}^{(n)} \frac{\left[ Q^{(n)\top} R \right]_{ij}}{\left[ Q^{(n)\top} Q^{(n)} P^{(n)} \right]_{ij}} \\
+  Q_{ij}^{(n+1)} &=& Q_{ij}^{(n)} \frac{\left[ R P^{(n+1)\top} \right]_{ij}}{\left[ Q^{(n)} P^{(n+1)} P^{(n+1)\top} \right]_{ij}}
+\end{eqnarray}
+ここで，$\left[ \cdot \right]_{ij}$は，$\left[ \  \right]$内の計算によって得られる行列の$i,j$要素を表す．
+
+これらの更新式で，値が収束するまで更新することで，$Q$と$P$が求まる．
+
+\subsection{Weighted Non-negative Matrix Factorization}
+Weighted Non-negative Matrix Factorization（WNMF）は，欠損値が含まれている行列に対して
+NMFを行うための手法である\cite{wnmf}．
+WNMFでは，NMFに対しマスク行列$W$を追加する．
+マスク行列$W$の各要素$W_{ij}$は次のように与えられる．
+\begin{equation}
+  W_{ij} =
+  \begin{cases}
+    1 & \text{if $R_{ij}$ is observed} \\
+    0 & \text{if $R_{ij}$ is unobserved}
+  \end{cases}
+\end{equation}
+
+マスク行列$W$を用いたWNMFの更新式は以下で与えられる．
+\begin{eqnarray}
+  P_{ij}^{(n+1)} &=& P_{ij}^{(n)} \frac{\left[ Q^{(n)\top} (W \circ R) \right]_{ij}}{\left[ Q^{(n)\top} (W \circ (Q^{(n)} P^{(n)})) \right]_{ij}} \nonumber \\
+  && \\
+  Q_{ij}^{(n+1)} &=& Q_{ij}^{(n)} \frac{\left[ (W \circ R) P^{(n+1)\top} \right]_{ij}}{\left[ (W \circ (Q^{(n)} P^{(n+1)})) P^{(n+1)\top} \right]_{ij}} \nonumber \\
+  &&
+\end{eqnarray}
+ここで，$\circ$はアダマール積を表す．

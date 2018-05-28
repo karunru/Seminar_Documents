@@ -1,0 +1,59 @@
+\subsection{Knowledge Tracing}
+Knowledge Tracingは1995年に提案され，今日においては学生モデリングのデファクトスタンダードとしての地位を確立している．
+Knowledge Tracingモデルは設問を解くために必要な各スキルについて，図\ref{fig:kt_diagram}のようなダイアグラムで表現される．
+このダイアグラムは学習機会を$t$，学習者のスキル状態（習得・未習得）を隠れ変数$k_{t}$，設問に対する解答結果（正答・誤答）を観測値$y_{t}$としている．
+マルコフ性を持つスキル状態は観測されず，解答結果のみが観測されるため，Knowledge Tracingは隠れマルコフモデル（Hidden Markov Model; HMM）である．
+
+Knowledge Tracingでは各スキルに対して4つのパラメータ$P(L_{0}),  P(T),  P(G),  P(S)$が設定され，これらのパラメータは式(\ref{eq:kt_already_know})〜(\ref{eq:kt_slip})で定義される．
+
+\vspace{-10mm}
+\begin{align}
+  \intertext{\ \textsf{\textbf{\itshape already  know}}} \nonumber \\[-11mm]
+  P(L_{0}) & \overset{\mathrm{def}}{=} P(k_{0} = \textit{true}). \label{eq:kt_already_know} \\[-3mm]
+  \intertext{\ \textsf{\textbf{\itshape learn}}} \nonumber \\[-11mm]
+  P(T) & \overset{\mathrm{def}}{=} P(k_{t} = \textit{true} | k_{t-1} = \textit{false} ). \\[-3mm]
+  \intertext{\ \textsf{\textbf{\itshape guess}}} \nonumber \\[-11mm]
+  P(G) & \overset{\mathrm{def}}{=} P(y_{t} = \textit{true} | k_{t} = \textit{false}). \\[-3mm]
+  \intertext{\ \textsf{\textbf{\itshape slip}}} \nonumber \\[-11mm]
+  P(S) & \overset{\mathrm{def}}{=} P(y_{t} = \textit{false} | k_{t} = \textit{true}). \label{eq:kt_slip}
+\end{align}
+
+\begin{figure}[t]
+  \centering \includegraphics[width=1\hsize, bb=0 0 449 240]{fig/kt_diagram.pdf}
+  \caption{Diagram of Knowledge Tracing.}
+  \label{fig:kt_diagram}
+\end{figure}
+
+$P(L_{0})$は事前知識（already know）として，学習者があらかじめスキルを習得している確率である．
+$P(T)$は学習者のスキル状態が``未習得''から\hspace{1em}``習得''に遷移する確率（learn）である．
+Knowledge Tracingではスキル状態が``習得''から``未習得''に遷移する確率を$0$としており，一度習得したスキルは忘れないということを仮定している．
+$P(G)$はスキルを習得していないにもかかわらず，設問に正答する確率であり，推測（guess）を表している．
+$P(S)$はスキルを習得しているにもかかわらず，設問に誤答する確率であり，ケアレスミス（slip）を表している．
+
+学習者の学習機会$t$までの解答結果，および各スキルに対して設定される$P(L_{0}),  P(T),  P(G),  P(S)$を式(\ref{eq:kt1})〜(\ref{eq:kt4})に適用することで，
+学習機会$t+1$におけるスキル状態，およびそのスキルを解くために必要とする設問に正答する確率を求めることができる．
+
+\vspace{-7mm}
+\begin{multline}
+  P(L_{t}=\emph{true}|y_{t}=\emph{true})  = \\
+  \frac{P(L_{t})(1-P(S))}{P(L_{t})(1-P(S)) + (1-P(L_{t}))P(G)}.  \label{eq:kt1}
+\end{multline}
+\vspace{-8mm}
+\begin{multline}
+  P(L_{t}=\emph{true}|y_{t}=\emph{false})  = \\
+  \frac{P(L_{t})P(S)}{P(L_{t})P(S) + (1-P(L_{t}))(1-P(G))}. \label{eq:kt2}
+\end{multline}
+\vspace{-8mm}
+\begin{multline}
+  P(L_{t+1}=\emph{true})  = \\
+  P(L_{t}|y_{t}) + (1-P(L_{t}|y_{t}))P(T). \label{eq:kt3}
+\end{multline}
+\vspace{-11mm}
+\begin{multline}
+  P(y_{t+1}=\emph{true})  = \\
+  P(L_{t+1})(1-P(S)) + (1-P(L_{t+1}))P(G). \label{eq:kt4}
+\end{multline}
+
+式(\ref{eq:kt1})および式(\ref{eq:kt2})は，学習機会$t$での解答結果を得たという条件のもとで，学習機会$t$におけるスキル状態を更新している．
+式(\ref{eq:kt1})および式(\ref{eq:kt2})によって計算された値を式(\ref{eq:kt3})に代入することで，未来の学習機会$t+1$でのスキル状態を求めることができる．
+さらに，式(\ref{eq:kt3})で求めた値を式(\ref{eq:kt4})に代入することで，未来の学習機会$t+1$において設問に正答する確率を求めることができる．

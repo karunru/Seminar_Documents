@@ -1,0 +1,135 @@
+\section{Factorization Machines}
+\subsection{Model Equation}
+
+式（\ref{eq:fm}）に，FMの次元$d = 2$のときのモデルの式を示す．
+\begin{equation}
+  \hat{y}(\vtr{x}) = w_{0} + \sum_{i=1}^{n}w_{i}{x}_{i} + \sum_{i=1}^{n} \sum_{j=i+1}^{n} \langle \vtr{v}_{i}, \vtr{v}_{j} \rangle{x}_{i}{x}_{j} \label{eq:fm}
+\end{equation}
+また，推定すべきFMのパラメーターは以下である．
+\begin{equation}
+    w_{0} \in \R, \vtr{w} \in \R^{n}, \vtr{V} \in \R^{n \times k}
+\end{equation}
+ここで， $\langle \cdot, \cdot \rangle$ は$k$次元の2つのベクトルの内積を表す．
+\begin{equation}
+  \langle \vtr{v}_{i}, \vtr{v}_{j} \rangle = \sum_{f=1}^{k} v_{i,f} \cdot v_{j,f}
+\end{equation}
+
+$\vtr{v}_{i}$は$V$の$i$行目の$k$次元のベクトルである．
+$k \in \mathbb{N}^{+}$は分解の次元を定義するハイパーパラメーターである．
+
+次元$d=2$のFMは2つの変数間の関係を捉えることができ，
+$w_{0}$は全体のバイアス，$w_{i}$は$i$番目の変数の強さ，
+$\hat{w}_{i, j} := \dt<\vtr{v}_{i}, \vtr{v}_{j}>$は変数間の関係を表す．
+$w_{i, j} \in \R$を使わず各変数に設定された重みの内積で表現することにより，
+学習データが少ないスパースなデータでも効率よく学習することができる．
+
+
+\subsection{計算量}
+
+式（\ref{eq:fm}）の計算量は，$\mathcal{O}(kn^{2})$であるが，式（\ref{eq:fm_order}）による式変換を行うことにより，$\mathcal{O}(kn)$に削減することができる．
+\begin{eqnarray}
+  && \sum_{i=1}^{n} \sum_{j=i+1}^{n} \langle \vtr{v}_{i}, \vtr{v}_{j} \rangle{x}_{i}{x}_{j} \nonumber \\
+  &=& \frac{1}{2} \sum_{i=1}^{n} \sum_{j=1}^{n} \langle \vtr{v}_{i}, \vtr{v}_{j} \rangle{x}_{i}{x}_{j} - \frac{1}{2} \langle \vtr{v}_{i}, \vtr{v}_{i} \rangle{x}_{i}{x}_{i} \nonumber \\
+  &=& \frac{1}{2} \left( \sum_{i=1}^{n} \sum_{j=1}^{n} \sum_{f=1}^{k} v_{i,f} v_{j,f}{x}_{i}{x}_{j} - \sum_{i=1}^{n} \sum_{f=1}^{k} v_{i,f} v_{i,f}{x}_{i}{x}_{i} \right) \nonumber \\
+  &=& \frac{1}{2} \sum_{f=1}^{k} \left ( \left ( \sum_{i=1}^{n} v_{i,f}{x}_{i} \right ) \left ( \sum_{j=1}^{n} v_{j,f}{x}_{j} \right ) - \sum_{i=1}^{n} v_{i,f}^{2}{x}_{i}^{2} \right) \nonumber \\
+  &=& \frac{1}{2} \sum_{f=1}^{k} \left ( \left ( \sum_{i=1}^{n} v_{i,f}{x}_{i} \right )^{2}  - \sum_{i=1}^{n} v_{i,f}^{2}{x}_{i}^{2} \right ) \label{eq:fm_order}
+\end{eqnarray}
+
+また，入力ベクトル$\vtr{x}$がスパースであるとすると，非ゼロ成分の数だけ計算をすればいいので，
+計算量は$\mathcal{O}(k\overline{m}_{D})$まで削減できる．
+
+\subsection{d-way FM}
+$d$次元のFMの式を式（\ref{eq:d-wayFM}）に示す．
+\begin{equation}
+  \hat{y}(\vtr{x}) = w_{0} +
+  \sum_{i=1}^{n} w_{i} x_{i} +
+  \sum_{l=2}^{d} \sum_{i_{1}=1}^{n} \cdots \sum_{i_{l}=i_{l-1}+1}^{n}
+  \left ( \prod_{j=1}^{l} x_{i_{j}}  \right )
+  \left ( \sum_{f=1}^{k_{l}} \prod_{j=1}^{l} v_{i_{j}, f}^{(l)} \right ) \label{eq:d-wayFM}
+\end{equation}
+
+また，パラメータは以下である．
+\begin{equation}
+    w_{0} \in \R, \vtr{w} \in \R^{n}, \forall l \in \{2, \cdots, d \} : \vtr{V}^{(l)} \in \R^{n \times k_{l}}, k_{l} \in \mathbb{N}^{+}
+\end{equation}
+
+$d$次元のFMも，単純に計算すれば$\mathcal{O}(k_{d}n^{d})$だが，式（\ref{eq:fm_order}）と同様の式変形を行うことにより，
+線形時間で計算することが可能である．
+
+\subsection{パラメータの学習}
+FMのパラメータは，SGD（Stochastic Gradient Descent）をはじめとした勾配法，
+ALS（Alternating least-squares）\footnote{交互最小二乗法．NMFのパラメータ求めるときみたいにあるパラメータを更新するときはそれ以外のパラメータを固定してってやるやつ}，
+MCMC（Markov Chain Monte Carlo）による推定の3種類がRendleによるライブラリに実装されている\cite{Rendle:2012:FML:2168752.2168771}．
+ここでは，正則化項なしの単純なSGDによるパラメータ推定を紹介する．
+
+まず，問題設定として以下の最適化問題を定義する．
+\begin{equation}
+  \argmin_{\Theta} \sum_{(\vtr{x}, y) \in D} \ell(\hat{y}(\vtr{x} \mid \Theta), y)
+\end{equation}
+$\Theta$はモデルのパラメータをまとめたものであり，FMの次元$d=2$のとき$\Theta = \{ w_{0}, \vtr{w}, V \}$である．
+また，$\hat{y}(\vtr{x} \mid \Theta)$はパラメータ$\Theta$のもとで入力$\vtr{x}$のときの予測値を表す．
+
+この最適化問題では，誤差関数$\ell$を選択することができる．
+回帰を行う際には式（\ref{eq:LeastSquareLoss}）に示す最小二乗誤差関数（Least Square Loss）を，
+分類を行う際には式（\ref{eq:LogisticLoss}）に示すロジスティック誤差関数（Logistic Loss）またはhinge lossを用いる．
+\begin{eqnarray}
+  \ell_{\rm LS}(t, \hat{y}) &=& (\hat{y} - t)^{2},\hspace{8ex} t \in \R \label{eq:LeastSquareLoss} \\
+  \ell_{\rm C}(t, \hat{y}) &=& -\ln(\sigma(t\cdot \hat{y})) \nonumber \\
+  &=& -\ln \left ( \frac{1}{1 + \exp(-t\hat{y})} \right ) \nonumber \\
+  &=& \ln(1 + \exp(-t\hat{y})),\hspace{8ex}  t \in \{-1, 1\} \label{eq:LogisticLoss}
+\end{eqnarray}
+ここで，$t$は教師データ，$\hat{y} \in \R$はモデルの予測値を表す．
+また，$\sigma(x) = \displaystyle \frac{1}{1 + \exp(-x)}$はシグモイド関数である．
+
+誤差関数を直接最適化するために，それぞれの導関数を求める．
+\begin{equation}
+  \frac{\partial}{\partial \theta} \ell_{\rm LS}(\hat{y}(\vtr{x} \mid \Theta), y)
+  = \frac{\partial}{\partial \theta}(\hat{y}(\vtr{x} \mid \Theta) - y)^{2}
+  = 2(\hat{y}(\vtr{x} \mid \Theta) - y)\frac{\partial}{\partial \theta}\hat{y}(\vtr{x} \mid \Theta)
+\end{equation}
+\begin{eqnarray}
+  \frac{\partial}{\partial \theta} \ell_{\rm C} (\hat{y}(\vtr{x} \mid \Theta), y) &=& \frac{\partial}{\partial \theta} -\ln(\sigma(\hat{y}(\vtr{x} \mid \Theta) \cdot y)) \nonumber \\
+  &=& - \frac{1}{\sigma(\hat{y}(\vtr{x} \mid \Theta) \cdot y)}\sigma(\hat{y}(\vtr{x} \mid \Theta) \cdot y)(1-\sigma(\hat{y}(\vtr{x} \mid \Theta) \cdot y)\frac{\partial}{\partial \theta}\hat{y}(\vtr{x} \mid \Theta) \nonumber \\
+  &=& (\sigma(\hat{y}(\vtr{x} \mid \Theta) \cdot y) - 1)\frac{\partial}{\partial \theta}\hat{y}(\vtr{x} \mid \Theta)
+\end{eqnarray}
+また，FMの各パラメータにおける勾配を式（\ref{eq:fm_gradient_1}）〜式（\ref{eq:fm_gradient_3}）に示す.
+\begin{eqnarray}
+  \frac{\partial}{\partial w_{0}} \hat{y}(\vtr{x}) &=& 1 \label{eq:fm_gradient_1}\\
+  \frac{\partial}{\partial w_{i}} \hat{y}(\vtr{x}) &=& x_{i} \\
+  \frac{\partial}{\partial v_{i,f}} \hat{y}(\vtr{x}) &=& \frac{\partial}{\partial v_{i,f}} \frac{1}{2} \sum_{f'=1}^{k} \left ( \left ( \sum_{j=1}^{n} v_{j,f'}{x}_{j} \right )^{2}  - \sum_{j=1}^{n} v_{j,f'}^{2}{x}_{j}^{2} \right ) \nonumber \\
+  &=& \frac{\partial}{\partial v_{i,f}} \frac{1}{2} \left ( \left ( \sum_{j=1}^{n} v_{j,f}{x}_{j} \right )^{2} - v_{i,f}^{2}{x}_{i}^{2} \right ) \nonumber \\
+  &=& \frac{1}{2} \left ( 2 \left ( \sum_{j=1}^{n} v_{j,f}{x}_{j} \right ) \cdot x_{i} - 2 v_{i,f}{x}_{i}^{2} \right ) \nonumber \\
+  &=& x_{i} \displaystyle \sum_{j=1}^{n} v_{j,f} x_{j} - v_{i,f} x_{i}^{2} \label{eq:fm_gradient_3}
+\end{eqnarray}
+式（\ref{eq:fm_gradient_3}）に含まれる$\sum_{j=1}^{n} v_{j,f} x_{j}$は，$\hat{y}(\vtr{x})$を計算する際に予め計算しておくことが可能であるため，
+全てのパラメータの勾配は$\mathcal{O}(1)$で求めることができる．
+
+SGDでは，以下の更新式に従ってパラメータを更新していく．
+\begin{equation}
+  \theta \gets \theta - \eta \left ( \frac{\partial}{\partial \theta} \ell(\hat{y}(\vtr{x}), y) \right )
+\end{equation}
+ここで，データ$(\vtr{x}, y) \in D$は，ランダムに選択される（または1周する毎にデータ$D$をシャッフルする）．
+また，$\eta \in \R^{+}$は学習率を決めるパラメータである．
+
+アルゴリズム\ref{alg1}に，正則化項なしのSGDによるFMのパラメータ推定を示す．
+
+\begin{algorithm}[H]
+\caption{Stochastic Gradient Descent(SGD) of Factorization Machines(FM)}
+\label{alg1}
+  \begin{algorithmic}
+  \Require{Training data $D$, Learning rate $\eta$, Initialization $\sigma$}
+  \Ensure{Model parameters $\Theta = \{ w_{0}, \vtr{w}, V \}$}
+  \State{$w_{0} \gets 0; \vtr{w} \gets (0, \cdots, 0); V \sim \mathcal{N}(0, \sigma);$}
+  \Repeat
+    \For{$(\vtr{x}, y) \in D$}
+      \State{$w_{0} \gets w_{0} - \eta \left ( \frac{\partial}{\partial w_{0}} \ell(\hat{y}(\vtr{x} \mid \Theta), y)  \right )$}
+      \For{$i \in \{ 1, \cdots, n \} \land x_{i} \ne 0$}
+        \State{$w_{i} \gets w_{i} - \eta \left ( \frac{\partial}{\partial w_{i}} \ell(\hat{y}(\vtr{x} \mid \Theta), y)  \right )$}
+        \For{$f \in \{ 1, \cdots, k \}$}
+          \State{$v_{i, f} \gets v_{i, f} - \eta \left ( \frac{\partial}{\partial v_{i, f}} \ell(\hat{y}(\vtr{x} \mid \Theta), y)  \right )$}
+        \EndFor
+      \EndFor
+    \EndFor
+  \Until{stopping criterion is met;}
+  \end{algorithmic}
+\end{algorithm}
